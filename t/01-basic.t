@@ -1,7 +1,6 @@
 use v6.c;
 use Test;
-use Trait::Env;
 
-pass "replace me";
+use-ok "Trait::Env";
 
 done-testing;

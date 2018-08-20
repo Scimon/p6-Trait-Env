@@ -1,20 +1,49 @@
 use v6.c;
-unit class Trait::Env:ver<0.0.1>:auth<cpan:SCIMON>;
 
-multi sub trait_mod:<is> ( Attribute $attr, :$env! ) is export {
-    my $env-name = $attr.name.substr(2).uc;
-    $attr.set_build(
-        -> $, $default {
-            with %*ENV{$env-name} -> $value {
-                Any ~~ $attr.type ?? $value !! $attr.type()($value);
-            } elsif $default {
-                $default;
-            } else {
-                die "environment name $env-name must exist";
+
+my %EXPORT;
+# Save the original trait_mod:<is> candidates, so we can pass on through
+# all of the trait_mod:<is>'s that cannot be handled here.
+# Stolen from Lizmat in Hash::LRU.
+BEGIN my $original_trait_mod_is = &trait_mod:<is>;
+
+module Trait::Env:ver<0.0.1>:auth<cpan:SCIMON> {
+
+    # Manually export
+    %EXPORT<&trait_mod:<is>> := proto sub trait_mod:<is>(|) {*}
+
+    multi sub trait_mod:<is> ( Attribute $attr, :%env ) {
+        apply-trait( $attr, %env );
+    }
+    
+    multi sub trait_mod:<is> ( Attribute $attr, :$env ) {
+        apply-trait( $attr, {} );
+    }   
+
+    sub apply-trait ( Attribute $attr, %env ) {
+        my $env-name = $attr.name.substr(2).uc;
+        $env-name ~~ s:g/'-'/_/;
+        $attr.set_build(
+            -> $tmp, $default {
+                with %*ENV{$env-name} -> $value {
+                    Any ~~ $attr.type ?? $value !! $attr.type()($value);
+                } elsif $default {
+                    $default;
+                } elsif %env<required> {
+                    die "required attribute {$env-name} not found in ENV";
+                } else {
+                    Any;
+                }
             }
-        }
-    );
+        );
+    }
+    
+    # Make sure we can hadle other traits.
+    multi sub trait_mod:<is>(|c) { $original_trait_mod_is(|c) }
+    
 }
+
+sub EXPORT { %EXPORT }
 
 =begin pod
 
@@ -25,10 +54,29 @@ Trait::Env - Trait to set an attribute from an environment variable.
 =head1 SYNOPSIS
 
   use Trait::Env;
+  class Test {
+      # Sets from %*ENV{HOME}. Undef if the var doesn't exist
+      has $.home is env;
+      # Sets from %*ENV{TMPDIR}. Defaults to '/tmp'
+      has $.tmpdir is env is default "/tmp"; 
+      # Set from %*ENV{WORKDIR}. Dies if not set.
+      has $.workdir is env(:required);
+  }
 
 =head1 DESCRIPTION
 
-Trait::Env is ...
+Trait::Env is exports the new trait C<is env>.
+
+Currently it's only working on Class / Role Attributes but I plan to expand it to variables as well in the future. 
+
+Note the the varialbe name will be uppercased and any dashes changed to underscores before matching against the environment.
+This functionality may be modifiable in the future.
+
+Note on variable interploation. Environment variables as stored as strings, if you wish to cast them to other types you need to ensure there is a default set or you'll get an error.
+
+Also Booleans need to be set to a blank string to map to false at the moment. 
+                                                                               
+Thanks to Jonathan Worthington and Elizabeth Mattijsen for giving me the framework to build this on. Any mistakes are mine. 
 
 =head1 AUTHOR
 

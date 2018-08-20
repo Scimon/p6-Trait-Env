@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Scimon/p6-Trait-Env.svg?branch=master)](https://travis-ci.org/Scimon/p6-Trait-Env)
+
 NAME
 ====
 
@@ -7,11 +9,29 @@ SYNOPSIS
 ========
 
     use Trait::Env;
+    class Test {
+        # Sets from %*ENV{HOME}. Undef if the var doesn't exist
+        has $.home is env;
+        # Sets from %*ENV{TMPDIR}. Defaults to '/tmp'
+        has $.tmpdir is env is default "/tmp"; 
+        # Set from %*ENV{WORKDIR}. Dies if not set.
+        has $.workdir is env(:required);
+    }
 
 DESCRIPTION
 ===========
 
-Trait::Env is ...
+Trait::Env is exports the new trait `is env`.
+
+Currently it's only working on Class / Role Attributes but I plan to expand it to variables as well in the future. 
+
+Note the the varialbe name will be uppercased and any dashes changed to underscores before matching against the environment. This functionality may be modifiable in the future.
+
+Note on variable interploation. Environment variables as stored as strings, if you wish to cast them to other types you need to ensure there is a default set or you'll get an error.
+
+Also Booleans need to be set to a blank string to map to false at the moment. 
+
+Thanks to Jonathan Worthington and Elizabeth Mattijsen for giving me the framework to build this on. Any mistakes are mine. 
 
 AUTHOR
 ======
