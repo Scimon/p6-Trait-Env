@@ -7,7 +7,14 @@ my %EXPORT;
 # Stolen from Lizmat in Hash::LRU.
 BEGIN my $original_trait_mod_is = &trait_mod:<is>;
 
-module Trait::Env:ver<0.0.1>:auth<cpan:SCIMON> {
+class X::Trait::Env::Required::Not::Set is Exception {
+    has $.payload;
+    method message() {
+        $.payload;
+    }
+}
+
+module Trait::Env:ver<0.1.0>:auth<cpan:SCIMON> {
 
     # Manually export
     %EXPORT<&trait_mod:<is>> := proto sub trait_mod:<is>(|) {*}
@@ -26,11 +33,15 @@ module Trait::Env:ver<0.0.1>:auth<cpan:SCIMON> {
         $attr.set_build(
             -> $tmp, $default {
                 with %*ENV{$env-name} -> $value {
-                    Any ~~ $attr.type ?? $value !! $attr.type()($value);
+                    if ( Bool ~~ $attr.type && so $value ~~ m:i/"false"|"true"/ ) {
+                        so $value ~~ m:i/"true"/;
+                    } else {
+                        Any ~~ $attr.type ?? $value !! $attr.type()($value);
+                    }
                 } elsif $default {
                     $default;
                 } elsif %env<required> {
-                    die "required attribute {$env-name} not found in ENV";
+                    die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
                 } else {
                     Any;
                 }
@@ -44,6 +55,8 @@ module Trait::Env:ver<0.0.1>:auth<cpan:SCIMON> {
 }
 
 sub EXPORT { %EXPORT }
+
+
 
 =begin pod
 
@@ -74,8 +87,10 @@ This functionality may be modifiable in the future.
 
 Note on variable interploation. Environment variables as stored as strings, if you wish to cast them to other types you need to ensure there is a default set or you'll get an error.
 
-Also Booleans need to be set to a blank string to map to false at the moment. 
-                                                                               
+For Booleans the standard Empty String == C<False> other String == C<True> works but the string "True" and "False" (any capitalization) will also map to True and False respectively.
+
+If a required attribute is not set the code will raise a C<X::Trait::Env::Required::Not::Set> Exception.
+
 Thanks to Jonathan Worthington and Elizabeth Mattijsen for giving me the framework to build this on. Any mistakes are mine. 
 
 =head1 AUTHOR

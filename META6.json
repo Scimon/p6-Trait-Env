@@ -14,7 +14,9 @@
   },
   "resources" : [ ],
   "source-url" : "https://github.com/Scimon/p6-Trait-Env.git",
-  "tags" : [ ],
+  "tags" : [
+    "Trait"
+  ],
   "test-depends" : [ ],
-  "version" : "0.0.1"
+  "version" : "0.1.0"
 }

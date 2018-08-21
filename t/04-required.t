@@ -19,7 +19,7 @@ subtest {
     %*ENV<ATTRIBUTE>:delete;
     
     my $tc;
-    dies-ok { $tc = TestClass.new() }, "Test Class dies with missing required";
+    throws-like { $tc = TestClass.new() }, X::Trait::Env::Required::Not::Set, "Test Class dies with missing required";
 }, "Dies when required not set.";
 
 

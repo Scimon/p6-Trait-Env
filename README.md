@@ -29,7 +29,9 @@ Note the the varialbe name will be uppercased and any dashes changed to undersco
 
 Note on variable interploation. Environment variables as stored as strings, if you wish to cast them to other types you need to ensure there is a default set or you'll get an error.
 
-Also Booleans need to be set to a blank string to map to false at the moment. 
+For Booleans the standard Empty String == `False` other String == `True` works but the string "True" and "False" (any capitalization) will also map to True and False respectively.
+
+If a required attribute is not set the code will raise a `X::Trait::Env::Required::Not::Set` Exception.
 
 Thanks to Jonathan Worthington and Elizabeth Mattijsen for giving me the framework to build this on. Any mistakes are mine. 
 
