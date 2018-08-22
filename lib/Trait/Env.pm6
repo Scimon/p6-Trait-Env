@@ -14,7 +14,7 @@ class X::Trait::Env::Required::Not::Set is Exception {
     }
 }
 
-module Trait::Env:ver<0.1.0>:auth<cpan:SCIMON> {
+module Trait::Env:ver<0.1.1>:auth<cpan:SCIMON> {
 
     # Manually export
     %EXPORT<&trait_mod:<is>> := proto sub trait_mod:<is>(|) {*}

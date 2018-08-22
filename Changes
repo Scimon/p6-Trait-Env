@@ -1,6 +1,8 @@
 Revision history for Trait-Env
 
 {{$NEXT}}
+
+0.1.1  2018-08-22T07:48:03+01:00
     - Fixed undefined variable failure for typed variables.
     - Updated tests to not clobber the environment.
 
