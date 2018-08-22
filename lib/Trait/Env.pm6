@@ -43,7 +43,7 @@ module Trait::Env:ver<0.1.0>:auth<cpan:SCIMON> {
                 } elsif %env<required> {
                     die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
                 } else {
-                    Any;
+                    Any ~~ $attr.type ?? Any !! $attr.type;
                 }
             }
         );
@@ -84,8 +84,6 @@ Currently it's only working on Class / Role Attributes but I plan to expand it t
 
 Note the the varialbe name will be uppercased and any dashes changed to underscores before matching against the environment.
 This functionality may be modifiable in the future.
-
-Note on variable interploation. Environment variables as stored as strings, if you wish to cast them to other types you need to ensure there is a default set or you'll get an error.
 
 For Booleans the standard Empty String == C<False> other String == C<True> works but the string "True" and "False" (any capitalization) will also map to True and False respectively.
 

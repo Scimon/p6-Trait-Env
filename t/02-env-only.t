@@ -13,10 +13,7 @@ class TestClass {
 }
 
 subtest {
-    temp %*ENV<INT> = "5";
-    temp %*ENV<BOOL> = "";
-    temp %*ENV<STR> = "String";
-    temp %*ENV<ATTRIBUTE> = "Here";
+    temp %*ENV = { "ATTRIBUTE" => "Here" };
 
     my $tc;
     ok $tc = TestClass.new(), "Test Class created OK";
@@ -26,10 +23,7 @@ subtest {
 }, "Basic Test Class. ENV Var exists";
 
 subtest {
-    temp %*ENV<INT> = "5";
-    temp %*ENV<BOOL> = "0";
-    temp %*ENV<STR> = "String";
-    %*ENV<ATTRIBUTE>:delete;
+    temp %*ENV = {};
 
     my $tc;
     ok $tc = TestClass.new(), "Test Class created OK";
@@ -38,10 +32,7 @@ subtest {
 }, "Basic Test Class. ENV Var not set";
 
 subtest {
-    temp %*ENV<INT> = "5";
-    temp %*ENV<BOOL> = "False";
-    temp %*ENV<STR> = "String";
-    temp %*ENV<DASH_TO_UNDERSCORE> = "Worked";
+    temp %*ENV = { "DASH_TO_UNDERSCORE" => "Worked" };
 
     my $tc;
     ok $tc = TestClass.new(), "Test Class created OK";
@@ -51,9 +42,7 @@ subtest {
 }, "Dashes -> Underscores";
 
 subtest {
-    temp %*ENV<INT> = "5";
-    temp %*ENV<BOOL> = "";
-    temp %*ENV<STR> = "String";
+    temp %*ENV = { INT => "5", BOOL => "", STR => "String" };
    
     my $tc;
     ok $tc = TestClass.new(), "Test Class created OK";
@@ -62,5 +51,17 @@ subtest {
     is $tc.str, "String", "String interpolated";
     
 }, "Interpolation";
+
+subtest {
+    temp %*ENV = {};
+   
+    my $tc;
+    ok $tc = TestClass.new(), "Test Class created OK";
+    is $tc.int, Int, "Integer not found";
+    is $tc.bool, Bool, "Bool not found";
+    is $tc.str, Str, "String not found";
+    
+}, "Interpolation not found";
+
 
 done-testing;

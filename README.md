@@ -27,8 +27,6 @@ Currently it's only working on Class / Role Attributes but I plan to expand it t
 
 Note the the varialbe name will be uppercased and any dashes changed to underscores before matching against the environment. This functionality may be modifiable in the future.
 
-Note on variable interploation. Environment variables as stored as strings, if you wish to cast them to other types you need to ensure there is a default set or you'll get an error.
-
 For Booleans the standard Empty String == `False` other String == `True` works but the string "True" and "False" (any capitalization) will also map to True and False respectively.
 
 If a required attribute is not set the code will raise a `X::Trait::Env::Required::Not::Set` Exception.

@@ -8,8 +8,7 @@ class TestClass {
 }
 
 subtest {
-    temp %*ENV<ATTRIBUTE> = "Here";
-    temp %*ENV<ATTRIBUTE_TWO> = "Here2";
+    temp %*ENV = { ATTRIBUTE => "Here", ATTRIBUTE_TWO => "Here2" };
 
     my $tc;
     ok $tc = TestClass.new(), "Test Class created OK";
@@ -20,8 +19,7 @@ subtest {
 }, "Defaults OK work and are ignored";
 
 subtest {
-    %*ENV<ATTRIBUTE>:delete;
-    %*ENV<ATTRIBUTE_TWO>:delete;
+    temp %*ENV = {};
 
     my $tc;
     ok $tc = TestClass.new(), "Test Class created OK";

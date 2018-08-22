@@ -7,7 +7,7 @@ class TestClass {
 }
 
 subtest {
-    temp %*ENV<ATTRIBUTE> = "Here";
+    temp %*ENV = { "ATTRIBUTE" => "Here" };
 
     my $tc;
     ok $tc = TestClass.new(), "Test Class created OK";
@@ -16,7 +16,7 @@ subtest {
 }, "Env and required play well together";
 
 subtest {
-    %*ENV<ATTRIBUTE>:delete;
+    temp %*ENV = {};
     
     my $tc;
     throws-like { $tc = TestClass.new() }, X::Trait::Env::Required::Not::Set, "Test Class dies with missing required";

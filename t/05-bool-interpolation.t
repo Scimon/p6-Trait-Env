@@ -13,8 +13,7 @@ class TestClassString {
 }
 
 subtest {
-    temp %*ENV<BOOL_SIMPLE_TRUE> = "1";
-    temp %*ENV<BOOL_SIMPLE_FALSE> = "";
+    temp %*ENV = { BOOL_SIMPLE_TRUE => "1", BOOL_SIMPLE_FALSE => "" };
 
     my $tc = TestClassSimple.new();
     is $tc.bool-simple-true, True, "Simple True works";
@@ -24,19 +23,17 @@ subtest {
 
 subtest {
     for < true True TRUE > -> $t {
-        temp %*ENV<BOOL_STRING_TRUE> = $t;
-        temp %*ENV<BOOL_STRING_FALSE> = "";
+        temp %*ENV = { BOOL_STRING_TRUE => $t };
         my $tc = TestClassString.new();
         is $tc.bool-string-true, True, "String $t works";
     }
 }, "Truthiness";
 
 subtest {
-    for < false False FALSE > -> $t {
-        temp %*ENV<BOOL_STRING_TRUE> = "";
-        temp %*ENV<BOOL_STRING_FALSE> = $t;
+    for < false False FALSE > -> $f {
+        temp %*ENV = { BOOL_STRING_FALSE => $f };
         my $tc = TestClassString.new();
-        is $tc.bool-string-false, False, "String $t works";
+        is $tc.bool-string-false, False, "String $f works";
     }
 }, "Falsiness";
 
