@@ -37,7 +37,7 @@ If a required attribute is not set the code will raise a `X::Trait::Env::Require
 
 Defaults can be set using the standard `is default` trait or the `:default` key. Note that for Positional attributes only the `:default` key works.
 
-Positional attribute will use the attribute name (after coercing) as the prefix for scan %*ENV for. Any keys starting with that prefix will be order by the key name lexically and their values put into the attribute.
+Positional attributes will use the attribute name (after coercing) as the prefix to scan %*ENV for. Any keys starting with that prefix will be ordered by the key name lexically and their values put into the attribute.
 
 AUTHOR
 ======

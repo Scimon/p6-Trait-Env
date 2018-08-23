@@ -27,6 +27,12 @@ module Trait::Env:ver<0.1.1>:auth<cpan:SCIMON> {
         apply-trait( $attr, {} );
     }   
 
+    sub coerce-name ( Str \name ) {
+        my $env-name = name.substr(2).uc;
+        $env-name ~~ s:g/'-'/_/;
+        $env-name;
+    }
+
     sub apply-trait ( Attribute $attr, %env ) {
         my $env-name = coerce-name( $attr.name );
         my &build = do given $attr.type {
@@ -36,14 +42,27 @@ module Trait::Env:ver<0.1.1>:auth<cpan:SCIMON> {
         $attr.set_build( &build );
     }
 
+    sub coerce-value( Mu $type, $value ) {
+        if ( Bool ~~ $type && so $value ~~ m:i/"false"|"true"/ ) {
+            so $value ~~ m:i/"true"/;
+        } else {
+            Any ~~ $type ?? $value !! $type($value);
+        }
+    }
+
     sub positional-build ( Str $env-name, Attribute $attr, %env ) {
         my $name-match = /^ "$env-name" .+ $/;
         return -> | {
             my @values = %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
+            my $type = Positional ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
             if @values.elems {
-                @values;
+                @values.map( -> $v { coerce-value( $type, $v ) } );
             } elsif %env<default> {
                 %env<default>;
+            } elsif %env<required> {
+                die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
+            } else {
+                $type;
             }
         };
     }
@@ -51,11 +70,7 @@ module Trait::Env:ver<0.1.1>:auth<cpan:SCIMON> {
     sub scalar-build ( Str $env-name, Attribute $attr, %env ) {
         return -> $, $default {
             with %*ENV{$env-name} -> $value {
-                if ( Bool ~~ $attr.type && so $value ~~ m:i/"false"|"true"/ ) {
-                    so $value ~~ m:i/"true"/;
-                } else {
-                    Any ~~ $attr.type ?? $value !! $attr.type()($value);
-                }
+                coerce-value( $attr.type, $value );
             } elsif $default|%env<default> {
                 $default // %env<default>;
             } elsif %env<required> {
@@ -65,21 +80,13 @@ module Trait::Env:ver<0.1.1>:auth<cpan:SCIMON> {
             }
         };
     }
-    
-    sub coerce-name ( Str \name ) {
-        my $env-name = name.substr(2).uc;
-        $env-name ~~ s:g/'-'/_/;
-        $env-name;
-    }
-    
+
     # Make sure we can hadle other traits.
     multi sub trait_mod:<is>(|c) { $original_trait_mod_is(|c) }
-    
+
 }
 
 sub EXPORT { %EXPORT }
-
-
 
 =begin pod
 
@@ -118,8 +125,8 @@ If a required attribute is not set the code will raise a C<X::Trait::Env::Requir
 
 Defaults can be set using the standard C<is default> trait or the C<:default> key. Note that for Positional attributes only the C<:default> key works.
 
-Positional attribute will use the attribute name (after coercing) as the prefix for scan %*ENV for.
-Any keys starting with that prefix will be order by the key name lexically and their values put into the attribute.
+Positional attributes will use the attribute name (after coercing) as the prefix to scan %*ENV for.
+Any keys starting with that prefix will be ordered by the key name lexically and their values put into the attribute.
 
 =head1 AUTHOR
 
