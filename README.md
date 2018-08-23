@@ -20,6 +20,8 @@ SYNOPSIS
         has $.workdir is env(:required);
         # Set from %*ENV{READ_DIRS.+} ordered lexically
         has @.read-dirs is env;
+        # Set from %*ENV{PATH} split on ':'
+        has @.path is env(:sep<:>);
     }
 
 DESCRIPTION
@@ -38,6 +40,8 @@ If a required attribute is not set the code will raise a `X::Trait::Env::Require
 Defaults can be set using the standard `is default` trait or the `:default` key. Note that for Positional attributes only the `:default` key works.
 
 Positional attributes will use the attribute name (after coercing) as the prefix to scan %*ENV for. Any keys starting with that prefix will be ordered by the key name lexically and their values put into the attribute.
+
+Alternatively you can use the `:sep` key to specify a seperator, in which case the single value will be read based on the name and the list then created by spliting on this seperator.
 
 AUTHOR
 ======

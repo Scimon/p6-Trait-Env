@@ -16,6 +16,10 @@ class TypeTest {
     has      @.arr  is env;
 }
 
+class SepTest {
+    has @.list is env(:sep<:>);
+}
+
 subtest {
     temp %*ENV = (
         :SIMPLE_ARRAY_1<1>,
@@ -97,6 +101,12 @@ subtest {
 
 }, "Bool Typed";
 
+subtest {
+    temp %*ENV = ( :LIST<1:2:3:4:5> );
+
+    my $tc = SepTest.new();
+    is $tc.list, <1 2 3 4 5>, "We have a seperated list";
+}
 
 
 done-testing;

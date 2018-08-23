@@ -14,7 +14,7 @@ class X::Trait::Env::Required::Not::Set is Exception {
     }
 }
 
-module Trait::Env:ver<0.2.0>:auth<cpan:SCIMON> {
+module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
 
     # Manually export
     %EXPORT<&trait_mod:<is>> := proto sub trait_mod:<is>(|) {*}
@@ -53,7 +53,11 @@ module Trait::Env:ver<0.2.0>:auth<cpan:SCIMON> {
     sub positional-build ( Str $env-name, Attribute $attr, %env ) {
         my $name-match = /^ "$env-name" .+ $/;
         return -> | {
-            my @values = %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
+            my @values = do with %env<sep> -> $sep {
+                %*ENV{$env-name}.split($sep);
+            } else {
+                %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
+            }
             my $type = Positional ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
             if @values.elems {
                 @values.map( -> $v { coerce-value( $type, $v ) } );
@@ -108,6 +112,8 @@ Trait::Env - Trait to set an attribute from an environment variable.
       has $.workdir is env(:required);
       # Set from %*ENV{READ_DIRS.+} ordered lexically
       has @.read-dirs is env;
+      # Set from %*ENV{PATH} split on ':'
+      has @.path is env(:sep<:>);
   }
 
 =head1 DESCRIPTION
@@ -127,6 +133,8 @@ Defaults can be set using the standard C<is default> trait or the C<:default> ke
 
 Positional attributes will use the attribute name (after coercing) as the prefix to scan %*ENV for.
 Any keys starting with that prefix will be ordered by the key name lexically and their values put into the attribute.
+
+Alternatively you can use the C<:sep> key to specify a seperator, in which case the single value will be read based on the name and the list then created by spliting on this seperator.
 
 =head1 AUTHOR
 
