@@ -1,12 +1,5 @@
 use v6.c;
 
-
-my %EXPORT;
-# Save the original trait_mod:<is> candidates, so we can pass on through
-# all of the trait_mod:<is>'s that cannot be handled here.
-# Stolen from Lizmat in Hash::LRU.
-BEGIN my $original_trait_mod_is = &trait_mod:<is>;
-
 class X::Trait::Env::Required::Not::Set is Exception {
     has $.payload;
     method message() {
@@ -16,14 +9,11 @@ class X::Trait::Env::Required::Not::Set is Exception {
 
 module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
 
-    # Manually export
-    %EXPORT<&trait_mod:<is>> := proto sub trait_mod:<is>(|) {*}
-
-    multi sub trait_mod:<is> ( Attribute $attr, :%env ) {
+    multi sub trait_mod:<is> ( Attribute $attr, :%env ) is export {
         apply-trait( $attr, %env );
     }
-    
-    multi sub trait_mod:<is> ( Attribute $attr, :$env ) {
+
+    multi sub trait_mod:<is> ( Attribute $attr, :$env ) is export {
         apply-trait( $attr, {} );
     }   
 
@@ -85,12 +75,7 @@ module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
         };
     }
 
-    # Make sure we can hadle other traits.
-    multi sub trait_mod:<is>(|c) { $original_trait_mod_is(|c) }
-
 }
-
-sub EXPORT { %EXPORT }
 
 =begin pod
 
