@@ -22,6 +22,9 @@ SYNOPSIS
         has @.read-dirs is env;
         # Set from %*ENV{PATH} split on ':'
         has @.path is env(:sep<:>);
+        # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
+        # EG a:b;c:d => { "a" => "b", "c" => "d" }
+        has %.name-map is env{ :sep<;>, :kvsep<:> };
     }
 
 DESCRIPTION
@@ -42,6 +45,8 @@ Defaults can be set using the standard `is default` trait or the `:default` key.
 Positional attributes will use the attribute name (after coercing) as the prefix to scan %*ENV for. Any keys starting with that prefix will be ordered by the key name lexically and their values put into the attribute.
 
 Alternatively you can use the `:sep` key to specify a seperator, in which case the single value will be read based on the name and the list then created by spliting on this seperator.
+
+Hashes can be single valut with a `:sep` key to specify the seperator between pairs and a `:kvsep` to specifiy the seperator in each pair between key and value.
 
 AUTHOR
 ======

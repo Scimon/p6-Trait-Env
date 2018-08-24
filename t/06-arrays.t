@@ -6,20 +6,6 @@ class TestClass {
     has @.simple-array is env(:default([1,2]));
 }
 
-class RequiredTest {
-    has @.required-array is env(:required);
-}
-
-class TypeTest {
-    has Bool @.bool is env;
-    has Int  @.int  is env;
-    has      @.arr  is env;
-}
-
-class SepTest {
-    has @.list is env(:sep<:>);
-}
-
 subtest {
     temp %*ENV = (
         :SIMPLE_ARRAY_1<1>,
@@ -68,12 +54,22 @@ subtest {
 
 }, "Check Default";
 
+class RequiredTest {
+    has @.required-array is env(:required);
+}
+
 subtest {
     temp %*ENV = ();
 
     throws-like { my $tc = RequiredTest.new() }, X::Trait::Env::Required::Not::Set, "Test Class dies with missing required";
 
 }, "Required test";
+
+class TypeTest {
+    has Bool @.bool is env;
+    has Int  @.int  is env;
+    has      @.arr  is env;
+}
 
 subtest {
     temp %*ENV = ();
@@ -100,6 +96,10 @@ subtest {
     is-deeply $tc.bool, Array[Bool].new(True,False,True,False), "We have an array";
 
 }, "Bool Typed";
+
+class SepTest {
+    has @.list is env(:sep<:>);
+}
 
 subtest {
     temp %*ENV = ( :LIST<1:2:3:4:5> );

@@ -23,11 +23,12 @@ module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
         $env-name;
     }
 
-    sub apply-trait ( Attribute $attr, %env ) {
+    sub apply-trait ( Attribute $attr, %settings ) {
         my $env-name = coerce-name( $attr.name );
         my &build = do given $attr.type {
-            when Positional { positional-build( $env-name, $attr, %env ) };
-            default { scalar-build( $env-name, $attr, %env ) };
+            when Positional { positional-build( $env-name, $attr, %settings ) };
+            when Associative { associative-build( $env-name, $attr, %settings ) };
+            default { scalar-build( $env-name, $attr, %settings ) };
         }
         $attr.set_build( &build );
     }
@@ -40,10 +41,19 @@ module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
         }
     }
 
-    sub positional-build ( Str $env-name, Attribute $attr, %env ) {
+    sub associative-build ( Str $env-name, Attribute $attr, %settings ) {
+        return -> | {
+            my %data = do with %settings{"sep", "kvsep"} -> ( $sep, $kvsep ) {
+                %*ENV{$env-name}.split($sep).map( -> $str { my ($k, $v ) = $str.split($kvsep); $k => $v; } ); 
+            }
+            %data;
+        }
+    }
+    
+    sub positional-build ( Str $env-name, Attribute $attr, %settings ) {
         my $name-match = /^ "$env-name" .+ $/;
         return -> | {
-            my @values = do with %env<sep> -> $sep {
+            my @values = do with %settings<sep> -> $sep {
                 %*ENV{$env-name}.split($sep);
             } else {
                 %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
@@ -51,9 +61,9 @@ module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
             my $type = Positional ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
             if @values.elems {
                 @values.map( -> $v { coerce-value( $type, $v ) } );
-            } elsif %env<default> {
-                %env<default>;
-            } elsif %env<required> {
+            } elsif %settings<default> {
+                %settings<default>;
+            } elsif %settings<required> {
                 die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
             } else {
                 $type;
@@ -61,13 +71,13 @@ module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
         };
     }
     
-    sub scalar-build ( Str $env-name, Attribute $attr, %env ) {
+    sub scalar-build ( Str $env-name, Attribute $attr, %settings ) {
         return -> $, $default {
             with %*ENV{$env-name} -> $value {
                 coerce-value( $attr.type, $value );
-            } elsif $default|%env<default> {
-                $default // %env<default>;
-            } elsif %env<required> {
+            } elsif $default|%settings<default> {
+                $default // %settings<default>;
+            } elsif %settings<required> {
                 die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
             } else {
                 Any ~~ $attr.type ?? Any !! $attr.type;
@@ -99,6 +109,9 @@ Trait::Env - Trait to set an attribute from an environment variable.
       has @.read-dirs is env;
       # Set from %*ENV{PATH} split on ':'
       has @.path is env(:sep<:>);
+      # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
+      # EG a:b;c:d => { "a" => "b", "c" => "d" }
+      has %.name-map is env{ :sep<;>, :kvsep<:> };
   }
 
 =head1 DESCRIPTION
@@ -121,6 +134,8 @@ Any keys starting with that prefix will be ordered by the key name lexically and
 
 Alternatively you can use the C<:sep> key to specify a seperator, in which case the single value will be read based on the name and the list then created by spliting on this seperator.
 
+Hashes can be single valut with a C<:sep> key to specify the seperator between pairs and a C<:kvsep> to specifiy the seperator in each pair between key and value.
+                                                                     
 =head1 AUTHOR
 
 Simon Proctor <simon.proctor@gmail.com>
