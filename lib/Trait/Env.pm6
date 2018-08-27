@@ -7,7 +7,7 @@ class X::Trait::Env::Required::Not::Set is Exception {
     }
 }
 
-module Trait::Env:ver<0.3.0>:auth<cpan:SCIMON> {
+module Trait::Env:ver<0.3.1>:auth<cpan:SCIMON> {
 
     multi sub trait_mod:<is> ( Attribute $attr, :%env ) is export {
         apply-trait( $attr, %env );
@@ -159,7 +159,10 @@ Any keys starting with that prefix will be ordered by the key name lexically and
 Alternatively you can use the C<:sep> key to specify a seperator, in which case the single value will be read based on the name and the list then created by spliting on this seperator.
 
 Hashes can be single valut with a C<:sep> key to specify the seperator between pairs and a C<:kvsep> to specifiy the seperator in each pair between key and value.
-                                                                     
+
+Hashes can also be defined by giving a C<:post_match> or C<:pre_match> arguments (or both).
+Any Environment variable starting with C<:pre_match> is defined or ending with C<:post-match> if defined will be included.
+
 =head1 AUTHOR
 
 Simon Proctor <simon.proctor@gmail.com>

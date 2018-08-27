@@ -55,6 +55,8 @@ Alternatively you can use the `:sep` key to specify a seperator, in which case t
 
 Hashes can be single valut with a `:sep` key to specify the seperator between pairs and a `:kvsep` to specifiy the seperator in each pair between key and value.
 
+Hashes can also be defined by giving a `:post_match` or `:pre_match` arguments (or both). Any Environment variable starting with `:pre_match` is defined or ending with `:post-match` if defined will be included.
+
 AUTHOR
 ======
 
