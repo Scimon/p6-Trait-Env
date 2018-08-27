@@ -25,6 +25,13 @@ SYNOPSIS
         # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
         # EG a:b;c:d => { "a" => "b", "c" => "d" }
         has %.name-map is env{ :sep<;>, :kvsep<:> };
+        # Get all pairs where the key ends with '_POST'
+        has %.post-map is env( :post_match<_POST> );
+        # Get all pairs where the Key starts with 'PRE_'
+        has %.pre-map is env( :pre_match<PRE_> );
+        # Get all pairs where the Key starts with 'PRE_' and ends with '_POST'
+        has %.both-map is env{ :pre_match<PRE_>, :post_match<_POST> };
+
     }
 
 DESCRIPTION
@@ -61,3 +68,4 @@ COPYRIGHT AND LICENSE
 Copyright 2018 Simon Proctor
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
+

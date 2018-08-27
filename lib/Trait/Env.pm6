@@ -43,10 +43,27 @@ module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
 
     sub associative-build ( Str $env-name, Attribute $attr, %settings ) {
         return -> | {
-            my %data = do with %settings{"sep", "kvsep"} -> ( $sep, $kvsep ) {
-                %*ENV{$env-name}.split($sep).map( -> $str { my ($k, $v ) = $str.split($kvsep); $k => $v; } ); 
+	    my %data;
+	    if ( %settings<sep>:exists && %settings<kvsep> ) {
+		%data = do with %settings{"sep", "kvsep"} -> ( $sep, $kvsep ) {
+		    %*ENV{$env-name}:exists ?? %*ENV{$env-name}.split($sep).map( -> $str { my ($k, $v ) = $str.split($kvsep); $k => $v; } ) !! {};
+		}
+	    } else {
+		%data = ( ( %settings<post_match>) || ( %settings<pre_match>:exists ) ) ?? %*ENV !! ();
+		if %settings<post_match>:exists {
+		    %data = %data.grep( -> $p { $p.key.ends-with( %settings<post_match> ) } );
+		}
+		if %settings<pre_match>:exists {
+		    %data = %data.grep( -> $p { $p.key.starts-with( %settings<pre_match> ) } );
+		}
+	    }
+	    if %data.keys {
+		%data;
+	    } elsif %settings<default> {
+                %settings<default>;
+            } elsif %settings<required> {
+                die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
             }
-            %data;
         }
     }
     
@@ -54,7 +71,7 @@ module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
         my $name-match = /^ "$env-name" .+ $/;
         return -> | {
             my @values = do with %settings<sep> -> $sep {
-                %*ENV{$env-name}.split($sep);
+		%*ENV{$env-name}:exists ?? %*ENV{$env-name}.split($sep) !! [];
             } else {
                 %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
             }
@@ -112,6 +129,13 @@ Trait::Env - Trait to set an attribute from an environment variable.
       # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
       # EG a:b;c:d => { "a" => "b", "c" => "d" }
       has %.name-map is env{ :sep<;>, :kvsep<:> };
+      # Get all pairs where the key ends with '_POST'
+      has %.post-map is env( :post_match<_POST> );
+      # Get all pairs where the Key starts with 'PRE_'
+      has %.pre-map is env( :pre_match<PRE_> );
+      # Get all pairs where the Key starts with 'PRE_' and ends with '_POST'
+      has %.both-map is env{ :pre_match<PRE_>, :post_match<_POST> };
+
   }
 
 =head1 DESCRIPTION

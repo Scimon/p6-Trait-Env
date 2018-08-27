@@ -98,7 +98,7 @@ subtest {
 }, "Bool Typed";
 
 class SepTest {
-    has @.list is env(:sep<:>);
+    has @.list is env{:sep<:>, :default( [1,2] ) };
 }
 
 subtest {
@@ -106,7 +106,15 @@ subtest {
 
     my $tc = SepTest.new();
     is $tc.list, <1 2 3 4 5>, "We have a seperated list";
-}
+}, "Seperated list";
 
+subtest {
+    temp %*ENV = ();
+
+    my $tc = SepTest.new();
+    is $tc.list, <1 2>, "Default OK";
+}, "Seperated list with default";
+
+       
 
 done-testing;

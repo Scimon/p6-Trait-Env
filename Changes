@@ -2,6 +2,8 @@ Revision history for Trait-Env
 
 {{$NEXT}}
     - Minor refactoring
+    - Fixed issue with defaults and seperated arrays
+    - String seperated hashes
 
 0.2.1  2018-08-23T16:53:44+01:00
     - Added :sep key to allow single value seperated lists
