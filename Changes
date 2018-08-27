@@ -1,6 +1,8 @@
 Revision history for Trait-Env
 
 {{$NEXT}}
+
+0.3.0  2018-08-27T12:42:09+01:00
     - Minor refactoring
     - Fixed issue with defaults and seperated arrays
     - String seperated hashes

@@ -7,7 +7,7 @@ class X::Trait::Env::Required::Not::Set is Exception {
     }
 }
 
-module Trait::Env:ver<0.2.1>:auth<cpan:SCIMON> {
+module Trait::Env:ver<0.3.0>:auth<cpan:SCIMON> {
 
     multi sub trait_mod:<is> ( Attribute $attr, :%env ) is export {
         apply-trait( $attr, %env );
