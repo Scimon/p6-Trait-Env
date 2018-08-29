@@ -1,4 +1,5 @@
 use v6.c;
+no precompilation;
 
 class X::Trait::Env::Required::Not::Set is Exception {
     has $.payload;
