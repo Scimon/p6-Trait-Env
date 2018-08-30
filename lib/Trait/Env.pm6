@@ -8,7 +8,7 @@ class X::Trait::Env::Required::Not::Set is Exception {
     }
 }
 
-module Trait::Env:ver<0.3.2>:auth<cpan:SCIMON> {
+module Trait::Env:ver<0.3.3>:auth<cpan:SCIMON> {
 
     multi sub trait_mod:<is> ( Attribute $attr, :%env ) is export {
         apply-trait( $attr, %env );
@@ -17,7 +17,7 @@ module Trait::Env:ver<0.3.2>:auth<cpan:SCIMON> {
     multi sub trait_mod:<is> ( Attribute $attr, :$env ) is export {
         apply-trait( $attr, {} );
     }   
-
+    
     sub coerce-name ( Str \name ) {
         my $env-name = name.substr(2).uc;
         $env-name ~~ s:g/'-'/_/;
@@ -58,8 +58,9 @@ module Trait::Env:ver<0.3.2>:auth<cpan:SCIMON> {
 		    %data = %data.grep( -> $p { $p.key.starts-with( %settings<pre_match> ) } );
 		}
 	    }
+            my $type = Associative ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
 	    if %data.keys {
-		%data;
+		%data.map( -> $p { $p.key => coerce-value( $type, $p.value ) } );
 	    } elsif %settings<default> {
                 %settings<default>;
             } elsif %settings<required> {
@@ -136,7 +137,6 @@ Trait::Env - Trait to set an attribute from an environment variable.
       has %.pre-map is env( :pre_match<PRE_> );
       # Get all pairs where the Key starts with 'PRE_' and ends with '_POST'
       has %.both-map is env{ :pre_match<PRE_>, :post_match<_POST> };
-
   }
 
 =head1 DESCRIPTION
@@ -163,6 +163,8 @@ Hashes can be single valut with a C<:sep> key to specify the seperator between p
 
 Hashes can also be defined by giving a C<:post_match> or C<:pre_match> arguments (or both).
 Any Environment variable starting with C<:pre_match> is defined or ending with C<:post-match> if defined will be included.
+
+Scalars, Positionals and Associative attributes can all be typed. 
 
 =head1 AUTHOR
 

@@ -3,7 +3,7 @@ use Test;
 use Trait::Env;
 
 class TestClass {
-    has %.sep-hash is env{:default({"a"=>"b"}), :sep<:>, :kvsep<;>};
+    has %.sep-hash is env{ :default({"a"=>"b"}), :sep<:>, :kvsep<;> };
 }
 
 subtest {
@@ -52,5 +52,38 @@ subtest {
     is $tc.both-hash, { "PRE_TEST_POST" => "test"  } , "Both Named hashes";
 
 }, "Named hashes";
+
+class TypedHash {
+    has Int %.int-hash is env{ :sep<:>, :kvsep<;> };
+    has Str %.str-hash is env{ :sep<:>, :kvsep<;> };
+    has Bool %.bool-hash is env{ :sep<:>, :kvsep<;> };
+}
+
+subtest {
+    temp %*ENV = (
+        INT_HASH => "a;1:b;2",
+        STR_HASH => "a;1:b;2",
+        BOOL_HASH => "a;true:b;false",
+    );
+
+    my $tc = TypedHash.new();
+    
+    is-deeply $tc.int-hash, Hash[Int].new( "a", 1, "b", 2 ), "Int Hash OK";
+    is-deeply $tc.str-hash, Hash[Str].new( "a", "1", "b", "2" ), "Str Hash OK";
+    is-deeply $tc.bool-hash, Hash[Bool].new( "a", True, "b", False ), "Bool Hash Ok";
+    
+}, "Typed with values";
+
+subtest {
+    temp %*ENV = ();
+
+    my $tc = TypedHash.new();
+    
+    is-deeply $tc.int-hash, Hash[Int].new(), "Empty Int Hash OK";
+    is-deeply $tc.str-hash, Hash[Str].new(), "Empty Str Hash OK";
+    is-deeply $tc.bool-hash, Hash[Bool].new(), "Empty Bool Hash Ok";
+    
+}, "Typed with values";
+
 
 done-testing;

@@ -31,7 +31,6 @@ SYNOPSIS
         has %.pre-map is env( :pre_match<PRE_> );
         # Get all pairs where the Key starts with 'PRE_' and ends with '_POST'
         has %.both-map is env{ :pre_match<PRE_>, :post_match<_POST> };
-
     }
 
 DESCRIPTION
@@ -56,6 +55,8 @@ Alternatively you can use the `:sep` key to specify a seperator, in which case t
 Hashes can be single valut with a `:sep` key to specify the seperator between pairs and a `:kvsep` to specifiy the seperator in each pair between key and value.
 
 Hashes can also be defined by giving a `:post_match` or `:pre_match` arguments (or both). Any Environment variable starting with `:pre_match` is defined or ending with `:post-match` if defined will be included.
+
+Scalars, Positionals and Associative attributes can all be typed. 
 
 AUTHOR
 ======
