@@ -72,6 +72,8 @@ Scalars, Positionals and Associative attributes can all be typed.
 
 Basic name mapping is now in place for Scalar variables (with type mapping, including the Boolean coercing). 
 
+Attribute or Variable only `is env` traits can be loaded individually with `Trait::Env::Attribute` and `Trait::Env::Variable`.
+
 AUTHOR
 ======
 
