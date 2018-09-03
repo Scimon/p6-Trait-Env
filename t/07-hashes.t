@@ -3,7 +3,7 @@ use Test;
 use Trait::Env;
 
 class TestClass {
-    has %.sep-hash is env{ :default({"a"=>"b"}), :sep<:>, :kvsep<;> };
+    has %.sep-hash is env( :default({"a"=>"b"}), :sep<:>, :kvsep<;> );
 }
 
 subtest {

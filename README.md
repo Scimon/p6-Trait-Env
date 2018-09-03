@@ -12,26 +12,38 @@ SYNOPSIS
     class Test {
         # Sets from %*ENV{HOME}. Undef if the var doesn't exist
         has $.home is env;
+
         # Sets from %*ENV{TMPDIR}. Defaults to '/tmp'
-        has $.tmpdir is env is default "/tmp"; 
+        has $.tmpdir is env is default "/tmp";
+
         # Sets from %*ENV{EXTRA_DIR}. Defaults to '/tmp'
-        has $.extra-dir is env( :default</tmp> ); 
+        has $.extra-dir is env( :default</tmp> );
+
         # Set from %*ENV{WORKDIR}. Dies if not set.
         has $.workdir is env(:required);
+
         # Set from %*ENV{READ_DIRS.+} ordered lexically
         has @.read-dirs is env;
+
         # Set from %*ENV{PATH} split on ':'
         has @.path is env(:sep<:>);
+
         # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
         # EG a:b;c:d => { "a" => "b", "c" => "d" }
-        has %.name-map is env{ :sep<;>, :kvsep<:> };
+        has %.name-map is env( :sep<;>, :kvsep<:> );
+
         # Get all pairs where the key ends with '_POST'
         has %.post-map is env( :post_match<_POST> );
+
         # Get all pairs where the Key starts with 'PRE_'
         has %.pre-map is env( :pre_match<PRE_> );
+
         # Get all pairs where the Key starts with 'PRE_' and ends with '_POST'
-        has %.both-map is env{ :pre_match<PRE_>, :post_match<_POST> };
+        has %.both-map is env( :pre_match<PRE_>, :post_match<_POST> );
     }
+
+    # Sets from %*ENV{HOME}. Undef if the var doesn't exist
+    has $home is env;
 
 DESCRIPTION
 ===========
@@ -56,7 +68,9 @@ Hashes can be single valut with a `:sep` key to specify the seperator between pa
 
 Hashes can also be defined by giving a `:post_match` or `:pre_match` arguments (or both). Any Environment variable starting with `:pre_match` is defined or ending with `:post-match` if defined will be included.
 
-Scalars, Positionals and Associative attributes can all be typed. 
+Scalars, Positionals and Associative attributes can all be typed.
+
+Basic name mapping is now in place for Scalar variables (with type mapping, including the Boolean coercing). 
 
 AUTHOR
 ======
@@ -71,3 +85,4 @@ COPYRIGHT AND LICENSE
 Copyright 2018 Simon Proctor
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
+

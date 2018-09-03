@@ -1,6 +1,8 @@
 Revision history for Trait-Env
 
 {{$NEXT}}
+    - Splitting out the Attributes and new Variables modules.
+    - Basic Variable interpolation with types.
 
 0.3.3  2018-08-30T09:26:43+01:00
     - Typed Hashes

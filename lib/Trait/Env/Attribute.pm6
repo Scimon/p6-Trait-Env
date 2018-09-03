@@ -4,37 +4,29 @@ no precompilation;
 unit module Trait::Env::Attribute;
 
 use Trait::Env::Exceptions;
+use Trait::Env::Shared;
 
 multi sub trait_mod:<is> ( Attribute $attr, :%env ) is export {
     apply-trait( $attr, %env );
 }
 
+multi sub trait_mod:<is> ( Attribute $attr, List :$env ) is export {
+    apply-trait( $attr, $env.hash );
+}
+
+
 multi sub trait_mod:<is> ( Attribute $attr, :$env ) is export {
     apply-trait( $attr, {} );
 }   
 
-sub coerce-name ( Str \name ) {
-    my $env-name = name.substr(2).uc;
-    $env-name ~~ s:g/'-'/_/;
-    $env-name;
-}
-
 sub apply-trait ( Attribute $attr, %settings ) {
-    my $env-name = coerce-name( $attr.name );
+    my $env-name = coerce-name( $attr.name, :attr );
     my &build = do given $attr.type {
         when Positional { positional-build( $env-name, $attr, %settings ) };
         when Associative { associative-build( $env-name, $attr, %settings ) };
         default { scalar-build( $env-name, $attr, %settings ) };
     }
     $attr.set_build( &build );
-}
-
-sub coerce-value( Mu $type, $value ) {
-    if ( Bool ~~ $type && so $value ~~ m:i/"false"|"true"/ ) {
-        so $value ~~ m:i/"true"/;
-    } else {
-        Any ~~ $type ?? $value !! $type($value);
-    }
 }
 
 sub associative-build ( Str $env-name, Attribute $attr, %settings ) {
