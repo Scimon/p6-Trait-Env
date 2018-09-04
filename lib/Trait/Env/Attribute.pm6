@@ -64,6 +64,10 @@ sub positional-build ( Str $env-name, Attribute $attr, %settings ) {
         } else {
             %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
         }
+        if ( ( ! @values ) && ( %*ENV{$env-name}:exists ) ) {
+            @values = %*ENV{$env-name}.split( "{$*DISTRO.path-sep}" );
+        }
+        
         my $type = Positional ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
         if @values.elems {
             @values.map( -> $v { coerce-value( $type, $v ) } );

@@ -11,7 +11,8 @@ subtest {
         :SIMPLE_ARRAY_1<1>,
         :SIMPLE_ARRAY_2<2>,
         :SIMPLE_ARRAY_3<3>,
-        :SIMPLE_ARRAY_4<4>
+        :SIMPLE_ARRAY_4<4>,
+        :NOT_ARRAY<5>
     );
 
     my $tc = TestClass.new();
@@ -24,7 +25,8 @@ subtest {
         :SIMPLE_ARRAY_A<1>,
         :SIMPLE_ARRAY_B<2>,
         :SIMPLE_ARRAY_C<3>,
-        :SIMPLE_ARRAY_D<4>
+        :SIMPLE_ARRAY_D<4>,
+        :NOT_ARRAY<10>
     );
 
     my $tc = TestClass.new();
@@ -53,6 +55,14 @@ subtest {
     is $tc.simple-array, [1,2], "Default OK";
 
 }, "Check Default";
+
+subtest {
+    my $value = <1 2 3 4>.join($*DISTRO.path-sep);
+    temp %*ENV = ( SIMPLE_ARRAY => $value );
+
+    my $tc = TestClass.new();
+    is $tc.simple-array, ["1","2","3","4"], "Fallback to path-sep works";
+}, "If there's only one variable we default to path-sep";
 
 class RequiredTest {
     has @.required-array is env(:required);

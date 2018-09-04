@@ -3,7 +3,7 @@ use v6.c;
 
 my %EXPORT;
 
-module Trait::Env:ver<0.4.0>:auth<cpan:SCIMON> {
+module Trait::Env:ver<0.4.1>:auth<cpan:SCIMON> {
 
     use Trait::Env::Attribute;
     use Trait::Env::Variable;
@@ -39,8 +39,10 @@ Trait::Env - Trait to set an attribute from an environment variable.
       has @.read-dirs is env;
 
       # Set from %*ENV{PATH} split on ':'
-      has @.path is env(:sep<:>);
-
+      # has @.path is env(:sep<:>);
+      # Or default to the $*DISTRO.path-sep value
+      has @.path is env;      
+      
       # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
       # EG a:b;c:d => { "a" => "b", "c" => "d" }
       has %.name-map is env( :sep<;>, :kvsep<:> );
@@ -79,7 +81,9 @@ Any keys starting with that prefix will be ordered by the key name lexically and
 
 Alternatively you can use the C<:sep> key to specify a seperator, in which case the single value will be read based on the name and the list then created by spliting on this seperator.
 
-Hashes can be single valut with a C<:sep> key to specify the seperator between pairs and a C<:kvsep> to specifiy the seperator in each pair between key and value.
+If there is a single matching environment variable and no C<:sep> key is set then the system will fall back to splitting on the C<$*DISTRO.path-sep> value as a seperator.
+                                                                     
+Hashes can be single value with a C<:sep> key to specify the seperator between pairs and a C<:kvsep> to specifiy the seperator in each pair between key and value.
 
 Hashes can also be defined by giving a C<:post_match> or C<:pre_match> arguments (or both).
 Any Environment variable starting with C<:pre_match> is defined or ending with C<:post-match> if defined will be included.

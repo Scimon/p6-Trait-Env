@@ -2,6 +2,9 @@ Revision history for Trait-Env
 
 {{$NEXT}}
 
+0.4.1  2018-09-04T17:30:25+01:00
+    - $*DISTRO.path-sep seperation for arrays.
+
 0.4.0  2018-09-03T19:34:26+01:00
     - Splitting out the Attributes and new Variables modules.
     - Basic Variable interpolation with types.

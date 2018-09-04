@@ -26,8 +26,10 @@ SYNOPSIS
         has @.read-dirs is env;
 
         # Set from %*ENV{PATH} split on ':'
-        has @.path is env(:sep<:>);
-
+        # has @.path is env(:sep<:>);
+        # Or default to the $*DISTRO.path-sep value
+        has @.path is env;      
+        
         # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
         # EG a:b;c:d => { "a" => "b", "c" => "d" }
         has %.name-map is env( :sep<;>, :kvsep<:> );
@@ -64,7 +66,9 @@ Positional attributes will use the attribute name (after coercing) as the prefix
 
 Alternatively you can use the `:sep` key to specify a seperator, in which case the single value will be read based on the name and the list then created by spliting on this seperator.
 
-Hashes can be single valut with a `:sep` key to specify the seperator between pairs and a `:kvsep` to specifiy the seperator in each pair between key and value.
+If there is a single matching environment variable and no `:sep` key is set then the system will fall back to splitting on the `$*DISTRO.path-sep` value as a seperator.
+
+Hashes can be single value with a `:sep` key to specify the seperator between pairs and a `:kvsep` to specifiy the seperator in each pair between key and value.
 
 Hashes can also be defined by giving a `:post_match` or `:pre_match` arguments (or both). Any Environment variable starting with `:pre_match` is defined or ending with `:post-match` if defined will be included.
 
@@ -87,4 +91,3 @@ COPYRIGHT AND LICENSE
 Copyright 2018 Simon Proctor
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
-
