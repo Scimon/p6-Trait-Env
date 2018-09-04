@@ -30,6 +30,7 @@ sub apply-trait ( Attribute $attr, %settings ) {
 }
 
 sub associative-build ( Str $env-name, Attribute $attr, %settings ) {
+    my $type = Associative ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
     return -> | {
 	my %data;
 	if ( %settings<sep>:exists && %settings<kvsep> ) {
@@ -58,6 +59,7 @@ sub associative-build ( Str $env-name, Attribute $attr, %settings ) {
 
 sub positional-build ( Str $env-name, Attribute $attr, %settings ) {
     my $name-match = /^ "$env-name" .+ $/;
+    my $type = Positional ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
     return -> | {
         my @values = do with %settings<sep> -> $sep {
 	    %*ENV{$env-name}:exists ?? %*ENV{$env-name}.split($sep) !! [];
@@ -67,8 +69,6 @@ sub positional-build ( Str $env-name, Attribute $attr, %settings ) {
         if ( ( ! @values ) && ( %*ENV{$env-name}:exists ) ) {
             @values = %*ENV{$env-name}.split( "{$*DISTRO.path-sep}" );
         }
-        
-        my $type = Positional ~~ $attr.type ?? Any !! $attr.type.^role_arguments[0];
         if @values.elems {
             @values.map( -> $v { coerce-value( $type, $v ) } );
         } elsif %settings<default> {
@@ -82,6 +82,7 @@ sub positional-build ( Str $env-name, Attribute $attr, %settings ) {
 }
 
 sub scalar-build ( Str $env-name, Attribute $attr, %settings ) {
+    my $type = Any ~~ $attr.type ?? Any !! $attr.type;
     return -> $, $default {
         with %*ENV{$env-name} -> $value {
             coerce-value( $attr.type, $value );

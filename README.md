@@ -47,6 +47,9 @@ SYNOPSIS
     # Sets from %*ENV{HOME}. Undef if the var doesn't exist
     has $home is env;
 
+    # Sets from %*ENV{PATH}. Uses default path seperator
+    has @path is env;
+
 DESCRIPTION
 ===========
 
@@ -74,9 +77,14 @@ Hashes can also be defined by giving a `:post_match` or `:pre_match` arguments (
 
 Scalars, Positionals and Associative attributes can all be typed.
 
-Basic name mapping is now in place for Scalar variables (with type mapping, including the Boolean coercing). 
+Variables can also be defined with `is env` following the same rules. 
 
 Attribute or Variable only `is env` traits can be loaded individually with `Trait::Env::Attribute` and `Trait::Env::Variable`.
+
+Note
+----
+
+Currently there is a known issue with the Attribute code which means it can't be precompiled. The Variable code does work precompiled and if speed is important you may want to use just `Trait::Env::Varaible`. 
 
 AUTHOR
 ======
@@ -91,3 +99,4 @@ COPYRIGHT AND LICENSE
 Copyright 2018 Simon Proctor
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
+

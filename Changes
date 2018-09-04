@@ -2,6 +2,9 @@ Revision history for Trait-Env
 
 {{$NEXT}}
 
+0.5.0  2018-09-04T19:53:02+01:00
+    - Variables, Positional and Associative.
+
 0.4.1  2018-09-04T17:30:25+01:00
     - $*DISTRO.path-sep seperation for arrays.
 
