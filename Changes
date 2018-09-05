@@ -2,6 +2,9 @@ Revision history for Trait-Env
 
 {{$NEXT}}
 
+0.5.1  2018-09-05T08:57:20+01:00
+    - Returned Trait::Env::Shared to provides as it's breaking builds
+
 0.5.0  2018-09-04T19:53:02+01:00
     - Variables, Positional and Associative.
 
