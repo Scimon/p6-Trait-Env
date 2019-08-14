@@ -2,6 +2,9 @@ Revision history for Trait-Env
 
 {{$NEXT}}
 
+1.0.1  2019-08-14T14:16:44+01:00
+    - Removed extraneous documentation line.
+
 1.0.0  2019-08-14T14:10:47+01:00
     - Remove v6.c from tests.
     - Break the seperate class test into it's own file

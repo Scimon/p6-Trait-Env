@@ -55,8 +55,6 @@ DESCRIPTION
 
 Trait::Env is exports the new trait `is env`.
 
-Currently it's only working on Class / Role Attributes but I plan to expand it to variables as well in the future. 
-
 Note the the variable name will be uppercased and any dashes changed to underscores before matching against the environment. This functionality may be modifiable in the future.
 
 For Booleans the standard Empty String == `False` other String == `True` works but the string "True" and "False" (any capitalization) will also map to True and False respectively.

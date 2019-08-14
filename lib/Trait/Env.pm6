@@ -2,7 +2,7 @@ use v6;
 
 my %EXPORT;
 
-module Trait::Env:ver<1.0.0>:auth<cpan:SCIMON> {
+module Trait::Env:ver<1.0.1>:auth<cpan:SCIMON> {
 
     use Trait::Env::Attribute;
     use Trait::Env::Variable;
@@ -65,8 +65,6 @@ Trait::Env - Trait to set an attribute from an environment variable.
 =head1 DESCRIPTION
 
 Trait::Env is exports the new trait C<is env>.
-
-Currently it's only working on Class / Role Attributes but I plan to expand it to variables as well in the future. 
 
 Note the the variable name will be uppercased and any dashes changed to underscores before matching against the environment.
 This functionality may be modifiable in the future.
