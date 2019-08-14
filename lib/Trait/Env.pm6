@@ -2,7 +2,7 @@ use v6;
 
 my %EXPORT;
 
-module Trait::Env:ver<0.5.2>:auth<cpan:SCIMON> {
+module Trait::Env:ver<1.0.0>:auth<cpan:SCIMON> {
 
     use Trait::Env::Attribute;
     use Trait::Env::Variable;
@@ -94,11 +94,6 @@ Scalars, Positionals and Associative attributes can all be typed.
 Variables can also be defined with C<is env> following the same rules.		     
 
 Attribute or Variable only C<is env> traits can be loaded individually with C<Trait::Env::Attribute> and C<Trait::Env::Variable>.
-
-=head2 Note
-
-Currently there is a known issue with the Attribute code which means it can't be precompiled.
-The Variable code does work precompiled and if speed is important you may want to use just C<Trait::Env::Varaible>. 
 
 =head1 AUTHOR
 

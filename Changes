@@ -2,6 +2,11 @@ Revision history for Trait-Env
 
 {{$NEXT}}
 
+1.0.0  2019-08-14T14:10:47+01:00
+    - Remove v6.c from tests.
+    - Break the seperate class test into it's own file
+    - Fix the precompliation issue for Attributes.
+
 0.5.2  2019-03-04T11:51:00Z
     - Stop using v6.c
 

@@ -81,11 +81,6 @@ Variables can also be defined with `is env` following the same rules.
 
 Attribute or Variable only `is env` traits can be loaded individually with `Trait::Env::Attribute` and `Trait::Env::Variable`.
 
-Note
-----
-
-Currently there is a known issue with the Attribute code which means it can't be precompiled. The Variable code does work precompiled and if speed is important you may want to use just `Trait::Env::Varaible`. 
-
 AUTHOR
 ======
 
