@@ -6,6 +6,12 @@ unit module Trait::Env::Attribute;
 use Trait::Env::Exceptions;
 use Trait::Env::Shared;
 
+role TraitEnvStore {
+    has Str $.env-name is rw;
+    has $.type is rw;
+    has %.settings is rw;
+}
+
 multi sub trait_mod:<is> ( Attribute $attr, :%env ) is export {
     apply-trait( $attr, %env );
 }
@@ -24,7 +30,14 @@ sub apply-trait ( Attribute $attr, %settings ) {
     my &build = do given $attr.type {
         when Positional { positional-build( $env-name, $attr, %settings ) };
         when Associative { associative-build( $env-name, $attr, %settings ) };
-        default { scalar-build( $env-name, $attr, %settings ) };
+        default {
+            #scalar-build( $env-name, $attr, %settings )
+            $attr does TraitEnvStore;
+            $attr.type = Any ~~ $attr.type ?? Any !! $attr.type;
+            $attr.env-name = $env-name;
+            $attr.settings = %settings;
+            &scalar-build;
+        };
     }
     $attr.set_build( &build );
 }
@@ -81,19 +94,23 @@ sub positional-build ( Str $env-name, Attribute $attr, %settings ) {
     };
 }
 
-sub scalar-build ( Str $env-name, Attribute $attr, %settings ) {
-    my $type = Any ~~ $attr.type ?? Any !! $attr.type;
-    return -> $, $default {
-        with %*ENV{$env-name} -> $value {
-            coerce-value( $attr.type, $value );
-        } elsif $default|%settings<default> {
-            $default // %settings<default>;
-        } elsif %settings<required> {
-            die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
-        } else {
-            Any ~~ $attr.type ?? Any !! $attr.type;
-        }
-    };
+sub scalar-build ( #Str $env-name, Attribute $attr, %settings
+    $a, $default;
+) {
+    note $a.perl;
+    
+#    my $type = Any ~~ $attr.type ?? Any !! $attr.type;
+#    return -> $, $default {
+#        with %*ENV{$env-name} -> $value {
+#            coerce-value( $attr.type, $value );
+#        } elsif $default|%settings<default> {
+#            $default // %settings<default>;
+#        } elsif %settings<required> {
+#            die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
+#        } else {
+#            Any ~~ $attr.type ?? Any !! $attr.type;
+#        }
+#    };
 }
 
 

@@ -1,8 +1,6 @@
-use v6.c;
+use v6;
 use Test;
 use Trait::Env;
-use lib "{$*PROGRAM.dirname}/lib";
-use Config;
 
 class TestClass {
     has $.attribute is env;
@@ -65,11 +63,5 @@ subtest {
     
 }, "Interpolation not found";
 
-subtest {
-    temp %*ENV = { :VALUE<value> }
-    my $c;
-    ok $c = Config.new(), "External Class created OK";
-    is $c.value, 'value', "Config value OK";
-}, "External class test";
 
 done-testing;
