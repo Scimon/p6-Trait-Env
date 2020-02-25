@@ -75,6 +75,8 @@ subtest {
 	    :PRE_HOME<home>,
 	    :PRE_TEST_POST<test>,
 	    :SEP_HASH<a;b:b;c:d;e>,
+            :SEP_HASH_EMPTY<a=b:b=c:>
+            :SEP_HASH_EMPTY_MID<a=b::b=c:>
 	);
     }
     END { %*ENV = %env_copy; }
@@ -83,11 +85,15 @@ subtest {
     my %pre-hash is env( :pre_match<PRE_> );
     my %both-hash is env( :pre_match<PRE_>, :post_match<_POST> );
     my %sep-hash is env( :default({"a"=>"b"}), :sep<:>, :kvsep<;> );
-
+    my %sep-hash-empty is env( :sep<:>, :kvsep<=> );
+    my %sep-hash-empty-mid is env( :sep<:>, :kvsep<=> );
+    
     is %post-hash, { "TEST_POST" => "test", "HOME_POST" => "home", "PRE_TEST_POST" => "test"  } , "Post Named hashes";
     is %pre-hash, { "PRE_TEST" => "test", "PRE_HOME" => "home", "PRE_TEST_POST" => "test"  } , "Pre Named hashes";
     is %both-hash, { "PRE_TEST_POST" => "test"  } , "Both Named hashes";
     is %sep-hash, { "a" => "b", "b" => "c", "d" => "e" } , "String to Hash works";
+    is %sep-hash-empty, { "a" => "b", "b" => "c" } , "String to Hash with trailing seperator works";
+    is %sep-hash-empty, { "a" => "b", "b" => "c" } , "String to Hash with empty interal works";
 
 }, "Hashes";
 

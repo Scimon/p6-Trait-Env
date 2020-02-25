@@ -33,7 +33,7 @@ sub associative-build ( Str $env-name, Variable $var, %settings ) {
     my %data;
     if ( %settings<sep>:exists && %settings<kvsep> ) {
 	%data = do with %settings{"sep", "kvsep"} -> ( $sep, $kvsep ) {
-	    %*ENV{$env-name}:exists ?? %*ENV{$env-name}.split($sep).map( -> $str { my ($k, $v ) = $str.split($kvsep); $k => $v; } ) !! {};
+	    %*ENV{$env-name}:exists ?? %*ENV{$env-name}.split($sep).grep( * !~~ "" ).map( -> $str { my ($k, $v ) = $str.split($kvsep); $k => $v; } ) !! {};
 	}
     } else {
 	%data = ( ( %settings<post_match>) || ( %settings<pre_match>:exists ) ) ?? %*ENV !! ();
