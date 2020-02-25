@@ -10,11 +10,11 @@
   "name" : "Trait::Env",
   "perl" : "6.c",
   "provides" : {
-    "Trait::Env" : "lib/Trait/Env.pm6",
-    "Trait::Env::Attribute" : "lib/Trait/Env/Attribute.pm6",
-    "Trait::Env::Exceptions" : "lib/Trait/Env/Exceptions.pm6",
-    "Trait::Env::Shared" : "lib/Trait/Env/Shared.pm6",
-    "Trait::Env::Variable" : "lib/Trait/Env/Variable.pm6"
+    "Trait::Env" : "lib/Trait/Env.rakumod",
+    "Trait::Env::Attribute" : "lib/Trait/Env/Attribute.rakumod",
+    "Trait::Env::Exceptions" : "lib/Trait/Env/Exceptions.rakumod",
+    "Trait::Env::Shared" : "lib/Trait/Env/Shared.rakumod",
+    "Trait::Env::Variable" : "lib/Trait/Env/Variable.rakumod"
   },
   "resources" : [ ],
   "source-url" : "https://github.com/Scimon/p6-Trait-Env.git",
@@ -22,5 +22,5 @@
     "Trait"
   ],
   "test-depends" : [ ],
-  "version" : "1.0.1"
+  "version" : "1.0.2"
 }
