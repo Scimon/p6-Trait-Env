@@ -1,0 +1,34 @@
+use v6;
+use Test;
+use Trait::Env;
+
+my %env_copy;
+
+subtest {
+    BEGIN {
+        %env_copy = %*ENV;
+        %*ENV = {
+            "ARRAY_SIMPLE" => '[1,2,3]',
+            "SINGLE_ITEM_NUMBER" => '1',
+            "SINGLE_ITEM_STRING" => '"a"',
+            "SINGLE_ITEM_BOOL" => 'true',
+            "HASH_SIMPLE" => '{"a":"b"}',
+        }
+    }
+    END { %*ENV = %env_copy }
+
+    my $array-simple is env(:json);
+    my $single-item-number is env(:json);
+    my $single-item-string is env(:json);
+    my $single-item-bool is env(:json);
+    my $hash-simple is env(:json);
+    
+    is-deeply $array-simple, [1,2,3], "Simple Json Array";
+    is-deeply $single-item-number, 1, "Single item number";
+    is-deeply $single-item-string, "a", "Single item string";
+    is-deeply $single-item-bool, True, "Single item boolean";
+    is-deeply $hash-simple, {"a" => "b"}, "Simple Hash";
+    
+}, "Json Array";
+
+done-testing;

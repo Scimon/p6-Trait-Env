@@ -4,7 +4,9 @@
     "Simon Proctor"
   ],
   "build-depends" : [ ],
-  "depends" : [ ],
+  "depends" : [
+    "JSON::Tiny"
+  ],
   "description" : "Trait to set an attribute from an environment variable.",
   "license" : "Artistic-2.0",
   "name" : "Trait::Env",
