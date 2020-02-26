@@ -57,30 +57,22 @@ sub associative-build ( Str $env-name, Variable $var, %settings ) {
 sub positional-build ( Str $env-name, Variable $var, %settings ) {
     my $name-match = /^ "$env-name" .+ $/;
     my $type = Positional ~~ $var.var.WHAT ?? Any !! ( Any ~~ $var.var.VAR.of ?? Any !! $var.var.VAR.of );
-    if %settings<json>:exists {
-        my @values = from-json( %*ENV{$env-name} );
-        if @values.elems == 1 && @values[0] ~~ Array {
-            @values = @values[0].Array;
-        }
-        @values;
+    my @values = do with %settings<sep> -> $sep {
+	%*ENV{$env-name}:exists ?? %*ENV{$env-name}.split($sep) !! [];
     } else {
-        my @values = do with %settings<sep> -> $sep {
-	    %*ENV{$env-name}:exists ?? %*ENV{$env-name}.split($sep) !! [];
-        } else {
-            %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
-        }
-        if ( ( ! @values ) && ( %*ENV{$env-name}:exists ) ) {
-            @values = %*ENV{$env-name}.split( "{$*DISTRO.path-sep}" );
-        }
-        if @values.elems {
-            @values.map( -> $v { coerce-value( $type, $v ) } );
-        } elsif %settings<default> {
-            %settings<default>;
-        } elsif %settings<required> {
-            die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
-        } else {
-            $type;
-        }
+        %*ENV.keys.grep( $name-match ).sort.map( -> $k { %*ENV{$k} } );
+    }
+    if ( ( ! @values ) && ( %*ENV{$env-name}:exists ) ) {
+        @values = %*ENV{$env-name}.split( "{$*DISTRO.path-sep}" );
+    }
+    if @values.elems {
+        @values.map( -> $v { coerce-value( $type, $v ) } );
+    } elsif %settings<default> {
+        %settings<default>;
+    } elsif %settings<required> {
+        die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
+    } else {
+        $type;
     }
 }
 
