@@ -2,6 +2,7 @@ use v6;
 use Test;
 use Trait::Env;
 
+# Can't use temp with variables so have to do this.
 my %env_copy;
 
 subtest {

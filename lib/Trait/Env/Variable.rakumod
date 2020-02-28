@@ -78,17 +78,17 @@ sub positional-build ( Str $env-name, Variable $var, %settings ) {
 
 sub scalar-build ( Str $env-name, Variable $var, %settings ) {
     my $type = Any ~~ $var.var.WHAT ?? Any !! $var.var.WHAT;
-    if ( %settings<json>:exists ) {
-        from-json( %*ENV{$env-name} );
-    } else {
-        with %*ENV{$env-name} -> $value {
-            coerce-value( $type, $value );
-        } elsif %settings<default> {
-            %settings<default>;
-        } elsif %settings<required> {
-            die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
+    with %*ENV{$env-name} -> $value {
+        if ( %settings<json>:exists ) {
+            from-json( $value );
         } else {
-            $type;
+            coerce-value( $type, $value );
         }
+    } elsif %settings<default> {
+        %settings<default>;
+    } elsif %settings<required> {
+        die X::Trait::Env::Required::Not::Set.new( :payload("required attribute {$env-name} not found in ENV") );
+    } else {
+        $type;
     }
 }
