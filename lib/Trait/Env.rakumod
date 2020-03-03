@@ -54,6 +54,9 @@ Trait::Env - Trait to set an attribute from an environment variable.
 
       # Get all pairs where the Key starts with 'PRE_' and ends with '_POST'
       has %.both-map is env( :pre_match<PRE_>, :post_match<_POST> );
+
+      # Parses JSON data
+      has $.json-data is env( :json );
   }
 
   # Sets from %*ENV{HOME}. Undef if the var doesn't exist
@@ -92,6 +95,10 @@ Scalars, Positionals and Associative attributes can all be typed.
 Variables can also be defined with C<is env> following the same rules.		     
 
 Attribute or Variable only C<is env> traits can be loaded individually with C<Trait::Env::Attribute> and C<Trait::Env::Variable>.
+
+Scalar Attributes and Variables can use C<is env(:json)> which will parse the ENV string as a JSON string using C<JSON::Tiny>.
+You can combine this with the C<:default> and C<:required> options but be aware that the C<:default> value should be a data store NOT
+a JSON value.
 
 =head1 AUTHOR
 

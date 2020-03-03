@@ -4,6 +4,7 @@ unit module Trait::Env::Attribute;
 
 use Trait::Env::Exceptions;
 use Trait::Env::Shared;
+use JSON::Tiny;
 
 my role TraitEnvStore {
     has Str $.store-env-name is rw;
@@ -12,7 +13,11 @@ my role TraitEnvStore {
 
     method scalar-build( $, $default ) {       
         with %*ENV{$!store-env-name} -> $value {
-            coerce-value( $!store-type, $value );
+             if ( %!store-settings<json>:exists ) {
+                 from-json( $value );
+             } else {
+                 coerce-value( $!store-type, $value );
+             }
         } elsif $default|%!store-settings<default> {
             $default // %!store-settings<default>;
         } elsif %!store-settings<required> {

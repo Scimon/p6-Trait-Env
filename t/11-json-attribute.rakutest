@@ -1,0 +1,47 @@
+use v6;
+use Test;
+use Trait::Env;
+
+subtest {
+    temp %*ENV = {
+        "JSON_HASH" => '{"a":"b"}',
+        "JSON_ARRAY" => '[1,2,3]',
+        "JSON_STRING" => '"a"',
+        "JSON_BOOL" => "true",
+    };
+    my class TestClass {
+        has $.json-hash is env(:json);
+        has $.json-array is env(:json);
+        has $.json-string is env(:json);
+        has $.json-bool is env(:json);
+    };
+
+    my $tc;
+    ok $tc = TestClass.new(), "Test Cless created OK";
+    is-deeply $tc.json-hash,   {"a" => "b" }, "We have a Json Hash Attribute";
+    is-deeply $tc.json-array,  [1,2,3],       "We have a Json Array Attribute";
+    is        $tc.json-string, "a",           "We have a Json String Attribute";
+    is        $tc.json-bool,   True,          "We have a Json Boolean Attribute";
+
+}, "Basic Json Attributes";
+
+subtest {
+    my class TestClass {
+        has $.json-hash is env(:json, :default({"a" => "b"}) );
+        has $.json-array is env(:json, :default([1,2,3]) );
+        has $.json-string is env(:json, :default("a") );
+        has $.json-bool is env(:json, :default(True) );
+    };
+
+    my $tc;
+    ok $tc = TestClass.new(), "Test Cless created OK";
+    is-deeply $tc.json-hash,   {"a" => "b" }, "We have a Json Hash Attribute";
+    is-deeply $tc.json-array,  [1,2,3],       "We have a Json Array Attribute";
+    is        $tc.json-string, "a",           "We have a Json String Attribute";
+    is        $tc.json-bool,   True,          "We have a Json Boolean Attribute";
+
+}, "Basic Json Attributes with defaults";
+
+
+done-testing;
+    

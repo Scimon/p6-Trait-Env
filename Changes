@@ -2,6 +2,7 @@ Revision history for Trait-Env
 
 {{$NEXT}}
     - Fix issues with trailing seperators and empty parts in hashes
+    - Added is env(:json) to Scalar Attributes and Variables.
 
 1.0.2  2020-02-25T09:44:11Z
     - Renaming File extensions
