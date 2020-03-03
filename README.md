@@ -42,6 +42,9 @@ SYNOPSIS
 
         # Get all pairs where the Key starts with 'PRE_' and ends with '_POST'
         has %.both-map is env( :pre_match<PRE_>, :post_match<_POST> );
+
+        # Parses JSON data
+        has $.json-data is env( :json );
     }
 
     # Sets from %*ENV{HOME}. Undef if the var doesn't exist
@@ -78,6 +81,8 @@ Scalars, Positionals and Associative attributes can all be typed.
 Variables can also be defined with `is env` following the same rules. 
 
 Attribute or Variable only `is env` traits can be loaded individually with `Trait::Env::Attribute` and `Trait::Env::Variable`.
+
+Scalar Attributes and Variables can use `is env(:json)` which will parse the ENV string as a JSON string using `JSON::Tiny`. You can combine this with the `:default` and `:required` options but be aware that the `:default` value should be a data store NOT a JSON value.
 
 AUTHOR
 ======
