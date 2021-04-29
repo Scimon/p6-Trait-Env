@@ -2,6 +2,9 @@ Revision history for Trait-Env
 
 {{$NEXT}}
 
+1.1.1  2021-04-29T09:02:58+01:00
+    - Issue with Typing on tests. See rakudo/rakudo#4096
+
 1.1.0  2020-03-03T10:04:57Z
     - Fix issues with trailing seperators and empty parts in hashes
     - Added is env(:json) to Scalar Attributes and Variables.
