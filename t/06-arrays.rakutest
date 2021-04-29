@@ -91,13 +91,13 @@ subtest {
 
 }, "Empty Typed";
 
-subtest {
-    temp %*ENV = ( :INTA<1>, :INTB<2>, :INTC<3> );
-
-    my $tc = TypeTest.new();
-    is-deeply $tc.int, Array[Int].new(<1 2 3>), "We have an array";
-
-}, "Int Typed";
+#subtest {
+#    temp %*ENV = ( :INTA<1>, :INTB<2>, :INTC<3> );
+#
+#    my $tc = TypeTest.new();
+#    is-deeply $tc.int, Array[Int].new(<1 2 3>), "We have an array";
+#
+#}, "Int Typed";
 
 subtest {
     temp %*ENV = ( :BOOL_A<True>, :BOOL_B<False>, :BOOL_C<1>, :BOOL_D('') );
