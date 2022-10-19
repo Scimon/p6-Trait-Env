@@ -2,7 +2,7 @@ use v6;
 
 my %EXPORT;
 
-module Trait::Env:ver<1.1.1>:auth<cpan:SCIMON> {
+module Trait::Env:ver<1.1.2>:auth<zef:Scimon> {
 
     use Trait::Env::Attribute;
     use Trait::Env::Variable;

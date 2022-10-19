@@ -2,6 +2,9 @@ Revision history for Trait-Env
 
 {{$NEXT}}
 
+1.1.2  2022-10-19T09:13:03+01:00
+    - Move to Zef
+
 1.1.1  2021-04-29T09:02:58+01:00
     - Issue with Typing on tests. See rakudo/rakudo#4096
 

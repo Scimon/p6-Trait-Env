@@ -1,5 +1,5 @@
 {
-  "auth": "cpan:SCIMON",
+  "auth": "zef:Scimon",
   "authors": [
     "Simon Proctor"
   ],
@@ -27,5 +27,5 @@
   ],
   "test-depends": [
   ],
-  "version": "1.1.1"
+  "version": "1.1.2"
 }
