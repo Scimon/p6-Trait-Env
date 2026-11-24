@@ -1,6 +1,8 @@
 Revision history for Trait-Env
 
 {{$NEXT}}
+    - Update to JSON::Fast (as part of a plan to get it working with RakuPP)
+    - Updated the git hub test runner
 
 1.1.2  2022-10-19T09:13:03+01:00
     - Move to Zef
