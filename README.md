@@ -27,7 +27,7 @@ SYNOPSIS
         # has @.path is env(:sep<:>);
         # Or default to the $*DISTRO.path-sep value
         has @.path is env;      
-        
+
         # Set from %*ENV{NAME_MAP} data split on ';' pairs split on ':'
         # EG a:b;c:d => { "a" => "b", "c" => "d" }
         has %.name-map is env( :sep<;>, :kvsep<:> );
@@ -80,7 +80,7 @@ Variables can also be defined with `is env` following the same rules.
 
 Attribute or Variable only `is env` traits can be loaded individually with `Trait::Env::Attribute` and `Trait::Env::Variable`.
 
-Scalar Attributes and Variables can use `is env(:json)` which will parse the ENV string as a JSON string using `JSON::Tiny`. You can combine this with the `:default` and `:required` options but be aware that the `:default` value should be a data store NOT a JSON value.
+Scalar Attributes and Variables can use `is env(:json)` which will parse the ENV string as a JSON string using `JSON::Fast`. You can combine this with the `:default` and `:required` options but be aware that the `:default` value should be a data store NOT a JSON value.
 
 AUTHOR
 ======
