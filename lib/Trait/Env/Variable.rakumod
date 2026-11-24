@@ -4,7 +4,7 @@ unit module Trait::Env::Variable;
 
 use Trait::Env::Exceptions;
 use Trait::Env::Shared;
-use JSON::Tiny;
+use JSON::Fast;
 
 multi sub trait_mod:<is> ( Variable $var, :%env ) is export {
     apply-trait( $var, %env );

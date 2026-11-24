@@ -6,7 +6,7 @@
   "build-depends": [
   ],
   "depends": [
-    "JSON::Tiny"
+    "JSON::Fast"
   ],
   "description": "Trait to set an attribute from an environment variable.",
   "license": "Artistic-2.0",

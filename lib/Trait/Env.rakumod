@@ -96,7 +96,7 @@ Variables can also be defined with C<is env> following the same rules.
 
 Attribute or Variable only C<is env> traits can be loaded individually with C<Trait::Env::Attribute> and C<Trait::Env::Variable>.
 
-Scalar Attributes and Variables can use C<is env(:json)> which will parse the ENV string as a JSON string using C<JSON::Tiny>.
+Scalar Attributes and Variables can use C<is env(:json)> which will parse the ENV string as a JSON string using C<JSON::Fast>.
 You can combine this with the C<:default> and C<:required> options but be aware that the C<:default> value should be a data store NOT
 a JSON value.
 

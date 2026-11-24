@@ -4,7 +4,7 @@ unit module Trait::Env::Attribute;
 
 use Trait::Env::Exceptions;
 use Trait::Env::Shared;
-use JSON::Tiny;
+use JSON::Fast;
 
 my role TraitEnvStore {
     has Str $.store-env-name is rw;
